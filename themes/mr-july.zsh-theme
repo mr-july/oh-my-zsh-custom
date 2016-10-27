@@ -77,8 +77,8 @@ set_prompt () {
   # required for the prompt
   setopt prompt_subst
   autoload zsh/terminfo
-  local arrowStart='╭─'
-  local   arrowEnd='╰─➤'
+  local arrowStart='┌─'
+  local   arrowEnd='└─→'
   local timeStr='%{$fg[yellow]%}%D{[%X]}'
   local vcsInfo='${PR_RESET}$(git_prompt_info)$(svn_prompt_info)'
   local str="$arrowStart $vcsInfo $timeStr "
