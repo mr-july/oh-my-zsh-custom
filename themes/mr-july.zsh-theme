@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
+
+# if previous command was not success, then RED
+local ret_status="%(?::%{$fg[red]%})"
+
 ########## COLOR ###########
 for COLOR in CYAN WHITE YELLOW MAGENTA BLACK BLUE RED DEFAULT GREEN GREY; do
   eval PR_$COLOR='%{$fg[${(L)COLOR}]%}'
@@ -77,8 +81,8 @@ set_prompt () {
   # required for the prompt
   setopt prompt_subst
   autoload zsh/terminfo
-  local arrowStart='┌─'
-  local   arrowEnd='└─▶'
+  local arrowStart='${ret_status}┌─'
+  local   arrowEnd='${ret_status}└─▶'
   local timeStr='%{$fg[yellow]%}%D{[%X]}'
   local vcsInfo='${PR_RESET}$(git_prompt_info)$(svn_prompt_info)'
   local str="$arrowStart $vcsInfo $timeStr "
@@ -86,7 +90,7 @@ set_prompt () {
 
   # ######### PROMPT #########
   PROMPT="$arrowStart"'$(prompt_context '$contextMaxLength") $vcsInfo $timeStr ${PR_RESET}
-$arrowEnd "
+$arrowEnd ${PR_RESET}"
   #RPROMPT="$vcsInfo"
   # Matching continuation prompt
   PROMPT2="  $arrowEnd"'${PR_RESET}%_${PR_RESET} '
