@@ -46,7 +46,17 @@ function svn_repo_need_upgrade() {
 }
 
 function svn_current_branch_name() {
-  grep '^URL:' <<< "${1:-$(svn info 2> /dev/null)}" | egrep -o '(tags|branches)/[^/]+|trunk'
+  #[[ `grep '^URL:' <<< "${1:-$(svn info 2> /dev/null)}"` =~ '((branches|tags)/[^/]*)|trunk' ]] && echo $MATCH
+  local url=`grep '^URL:' <<< "${1:-$(svn info 2> /dev/null)}"`
+  [[ "$url" == *'/trunk/'* ]] && echo "trunk" && return
+  for x in "branches" "tags"
+  do
+    if [[ "$url" == *"/$x/"* ]]
+    then
+      echo $url | sed 's#.*/\('$x'/[^/]*\).*#\1#'
+      return
+    fi
+  done
 }
 
 function svn_repo_root_name() {
